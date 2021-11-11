@@ -1,25 +1,64 @@
 {
     "name": "vscode-regino",
-    "displayName": "vscode-regino",
+    "displayName": "regino-lang",
     "description": "Provides Language support for Regino.",
     "version": "0.0.1",
     "engines": {
         "vscode": "^1.62.0"
     },
+    "dependencies": {
+        "@types/node": "^16.11.7",
+        "path": "^0.12.7",
+        "vscode": "^1.1.37",
+        "vscode-languageclient": "^7.0.0"
+    },
     "categories": [
         "Programming Languages"
     ],
     "contributes": {
-        "languages": [{
-            "id": "regino",
-            "aliases": ["Regino", "regino"],
-            "extensions": [".rgn"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "regino",
-            "scopeName": "source.rgn",
-            "path": "./syntaxes/regino.tmLanguage.json"
-        }]
+        "languages": [
+            {
+                "id": "regino",
+                "aliases": [
+                    "Regino",
+                    "regino"
+                ],
+                "extensions": [
+                    ".rgn"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "regino",
+                "scopeName": "source.rgn",
+                "path": "./syntaxes/regino.json"
+            }
+        ],
+        "configuration": [
+            {
+                "title": "Settings for Regino extension",
+                "properties": {
+                    "regino.home": {
+                        "type": "string",
+                        "description": "Absolute path to the installation directory of regino-lang processor. Defaults to $HOME/.regino",
+                        "default": "$HOME/.regino"
+                    },
+                    "regino.compiler": {
+                        "type": "string",
+                        "description": "Absolute path to the binary of regino-lang compiler. Defaults to $HOME/.regino/regino",
+                        "default": "$HOME/.regino/regino"
+                    }
+                }
+            }
+        ]
+    },
+    "main": "./out/extension.js",
+    "activationEvents": [
+        "onLanguage:regino"
+    ],
+    "scripts": {
+        "tsc-build": "tsc -b"
     }
 }
