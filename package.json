@@ -9,8 +9,9 @@
     "dependencies": {
         "@types/node": "^16.11.7",
         "path": "^0.12.7",
-        "vscode": "^1.1.37",
-        "vscode-languageclient": "^7.0.0"
+        "vsce": "^2.4.0",
+        "vscode-languageclient": "^7.0.0",
+        "vscode-languageserver-protocol": "^3.16.0"
     },
     "categories": [
         "Programming Languages"
@@ -59,6 +60,7 @@
         "onLanguage:regino"
     ],
     "scripts": {
-        "tsc-build": "tsc -b"
+        "tsc-build": "tsc -b",
+        "update-vscode": "node ./node_modules/vscode/bin/install"
     }
 }
