@@ -1,32 +1,1187 @@
 {
-	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "Regino",
-	"patterns": [
-		{
-			"include": "#keywords"
-		},
-		{
-			"include": "#strings"
-		}
-	],
-	"repository": {
-		"keywords": {
-			"patterns": [{
-				"name": "keyword.control.regino",
-				"match": "\\b(if|while|for|return|block|when|case|of|func|break|continue)\\b"
-			}]
-		},
-		"strings": {
-			"name": "string.quoted.double.regino",
-			"begin": "\"",
-			"end": "\"",
-			"patterns": [
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Regino",
+    "fileTypes": [
+        "rgn"
+    ],
+    "scopeName": "source.regino",
+    "patterns": [
+        {
+            "comment": "boxed slice literal",
+            "begin": "(<)(\\[)",
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.brackets.angle.regino"
+                },
+                "2": {
+                    "name": "punctuation.brackets.square.regino"
+                }
+            },
+            "end": ">",
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.brackets.angle.regino"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#block-comments"
+                },
+                {
+                    "include": "#comments"
+                },
+                {
+                    "include": "#gtypes"
+                },
+                {
+                    "include": "#lvariables"
+                },
+                {
+                    "include": "#lifetimes"
+                },
+                {
+                    "include": "#punctuation"
+                },
+                {
+                    "include": "#types"
+                }
+            ]
+        },
+        {
+            "comment": "macro type metavariables",
+            "name": "meta.macro.metavariable.type.regino",
+            "match": "(\\$)((crate)|([A-Z][A-Za-z0-9_]*))((:)(block|expr|ident|item|lifetime|literal|meta|path?|stmt|tt|ty|vis))?",
+            "captures": {
+                "1": {
+                    "name": "keyword.operator.macro.dollar.regino"
+                },
+                "3": {
+                    "name": "keyword.other.crate.regino"
+                },
+                "4": {
+                    "name": "entity.name.type.metavariable.regino"
+                },
+                "6": {
+                    "name": "keyword.operator.key-value.regino"
+                },
+                "7": {
+                    "name": "variable.other.metavariable.specifier.regino"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#keywords"
+                }
+            ]
+        },
+        {
+            "comment": "macro metavariables",
+            "name": "meta.macro.metavariable.regino",
+            "match": "(\\$)([a-z][A-Za-z0-9_]*)((:)(block|expr|ident|item|lifetime|literal|meta|path?|stmt|tt|ty|vis))?",
+            "captures": {
+                "1": {
+                    "name": "keyword.operator.macro.dollar.regino"
+                },
+                "2": {
+                    "name": "variable.other.metavariable.name.regino"
+                },
+                "4": {
+                    "name": "keyword.operator.key-value.regino"
+                },
+                "5": {
+                    "name": "variable.other.metavariable.specifier.regino"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#keywords"
+                }
+            ]
+        },
+        {
+            "comment": "macro rules",
+            "name": "meta.macro.rules.regino",
+            "match": "\\b(macro_rules!)\\s+(([a-z0-9_]+)|([A-Z][a-z0-9_]*))\\s+(\\{)",
+            "captures": {
+                "1": {
+                    "name": "entity.name.function.macro.rules.regino"
+                },
+                "3": {
+                    "name": "entity.name.function.macro.regino"
+                },
+                "4": {
+                    "name": "entity.name.type.macro.regino"
+                },
+                "5": {
+                    "name": "punctuation.brackets.curly.regino"
+                }
+            }
+        },
+        {
+            "comment": "attributes",
+            "name": "meta.attribute.regino",
+            "begin": "(#)(\\!?)(\\[)",
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.definition.attribute.regino"
+                },
+                "2": {
+                    "name": "keyword.operator.attribute.inner.regino"
+                },
+                "3": {
+                    "name": "punctuation.brackets.attribute.regino"
+                }
+            },
+            "end": "\\]",
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.brackets.attribute.regino"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#block-comments"
+                },
+                {
+                    "include": "#comments"
+                },
+                {
+                    "include": "#keywords"
+                },
+                {
+                    "include": "#lifetimes"
+                },
+                {
+                    "include": "#punctuation"
+                },
+                {
+                    "include": "#strings"
+                },
+                {
+                    "include": "#gtypes"
+                },
+                {
+                    "include": "#types"
+                }
+            ]
+        },
+        {
+            "comment": "modules",
+            "match": "(mod)\\s+((?:r#(?!crate|[Ss]elf|super))?[a-z][A-Za-z0-9_]*)",
+            "captures": {
+                "1": {
+                    "name": "storage.type.regino"
+                },
+                "2": {
+                    "name": "entity.name.module.regino"
+                }
+            }
+        },
+        {
+            "comment": "external crate imports",
+            "name": "meta.import.regino",
+            "begin": "\\b(extern)\\s+(crate)",
+            "beginCaptures": {
+                "1": {
+                    "name": "storage.type.regino"
+                },
+                "2": {
+                    "name": "keyword.other.crate.regino"
+                }
+            },
+            "end": ";",
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.semi.regino"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#block-comments"
+                },
+                {
+                    "include": "#comments"
+                },
+                {
+                    "include": "#keywords"
+                },
+                {
+                    "include": "#punctuation"
+                }
+            ]
+        },
+        {
+            "comment": "use statements",
+            "name": "meta.use.regino",
+            "begin": "\\b(use)\\s",
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.other.regino"
+                }
+            },
+            "end": ";",
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.semi.regino"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#block-comments"
+                },
+                {
+                    "include": "#comments"
+                },
+                {
+                    "include": "#keywords"
+                },
+                {
+                    "include": "#namespaces"
+                },
+                {
+                    "include": "#punctuation"
+                },
+                {
+                    "include": "#types"
+                },
+                {
+                    "include": "#lvariables"
+                }
+            ]
+        },
+        {
+            "include": "#block-comments"
+        },
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#lvariables"
+        },
+        {
+            "include": "#constants"
+        },
+        {
+            "include": "#gtypes"
+        },
+        {
+            "include": "#functions"
+        },
+        {
+            "include": "#types"
+        },
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#lifetimes"
+        },
+        {
+            "include": "#macros"
+        },
+        {
+            "include": "#namespaces"
+        },
+        {
+            "include": "#punctuation"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#variables"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "comment": "documentation comments",
+                    "name": "comment.line.documentation.regino",
+                    "match": "^\\s*///.*"
+                },
+                {
+                    "comment": "line comments",
+                    "name": "comment.line.double-slash.regino",
+                    "match": "\\s*//.*"
+                }
+            ]
+        },
+        "block-comments": {
+            "patterns": [
+                {
+                    "comment": "empty block comments",
+                    "name": "comment.block.regino",
+                    "match": "/\\*\\*/"
+                },
+                {
+                    "comment": "block documentation comments",
+                    "name": "comment.block.documentation.regino",
+                    "begin": "/\\*\\*",
+                    "end": "\\*/",
+                    "patterns": [
+                        {
+                            "include": "#block-comments"
+                        }
+                    ]
+                },
+                {
+                    "comment": "block comments",
+                    "name": "comment.block.regino",
+                    "begin": "/\\*(?!\\*)",
+                    "end": "\\*/",
+                    "patterns": [
+                        {
+                            "include": "#block-comments"
+                        }
+                    ]
+                }
+            ]
+        },
+        "constants": {
+            "patterns": [
+                {
+                    "comment": "ALL CAPS constants",
+                    "name": "constant.other.caps.regino",
+                    "match": "\\b[A-Z]{2}[A-Z0-9_]*\\b"
+                },
+                {
+                    "comment": "constant declarations",
+                    "match": "\\b(const)\\s+([A-Z][A-Za-z0-9_]*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "storage.type.regino"
+                        },
+                        "2": {
+                            "name": "constant.other.caps.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "decimal integers and floats",
+                    "name": "constant.numeric.decimal.regino",
+                    "match": "\\b\\d[\\d_]*(\\.?)[\\d_]*(?:(E)([+-])([\\d_]+))?('[iuf][1-9][0-9]*)?\\b",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.separator.dot.decimal.regino"
+                        },
+                        "2": {
+                            "name": "keyword.operator.exponent.regino"
+                        },
+                        "3": {
+                            "name": "keyword.operator.exponent.sign.regino"
+                        },
+                        "4": {
+                            "name": "constant.numeric.decimal.exponent.mantissa.regino"
+                        },
+                        "5": {
+                            "name": "entity.name.type.numeric.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "hexadecimal integers",
+                    "name": "constant.numeric.hex.regino",
+                    "match": "\\b0x[\\da-fA-F_]+('[iu][1-9][0-9]*)?\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.numeric.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "octal integers",
+                    "name": "constant.numeric.oct.regino",
+                    "match": "\\b0o[0-7_]+('[iu][1-9][0-9]*)?\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.numeric.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "binary integers",
+                    "name": "constant.numeric.bin.regino",
+                    "match": "\\b0b[01_]+('[iu][1-9][0-9]*)?\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.numeric.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "booleans",
+                    "name": "constant.language.bool.regino",
+                    "match": "\\b(true|false)\\b"
+                }
+            ]
+        },
+        "escapes": {
+            "comment": "escapes: ASCII, byte, Unicode, quote, regex",
+            "name": "constant.character.escape.regino",
+            "match": "(\\\\)(?:(?:(x[0-7][0-7a-fA-F])|(u(\\{)[\\da-fA-F]{4,6}(\\}))|.))",
+            "captures": {
+                "1": {
+                    "name": "constant.character.escape.backslash.regino"
+                },
+                "2": {
+                    "name": "constant.character.escape.bit.regino"
+                },
+                "3": {
+                    "name": "constant.character.escape.unicode.regino"
+                },
+                "4": {
+                    "name": "constant.character.escape.unicode.punctuation.regino"
+                },
+                "5": {
+                    "name": "constant.character.escape.unicode.punctuation.regino"
+                }
+            }
+        },
+        "functions": {
+            "patterns": [
+                {
+                    "comment": "pub as a function",
+                    "match": "\\b(pub)(\\()",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.other.regino"
+                        },
+                        "2": {
+                            "name": "punctuation.brackets.round.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "function definition",
+                    "name": "meta.function.definition.regino",
+                    "begin": "\\b(func)\\s+((?:r#(?!crate|[Ss]elf|super))?[A-Za-z0-9_]+)((\\()|(<))",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.other.func.regino"
+                        },
+                        "2": {
+                            "name": "entity.name.function.regino"
+                        },
+                        "4": {
+                            "name": "punctuation.brackets.round.regino"
+                        },
+                        "5": {
+                            "name": "punctuation.brackets.angle.regino"
+                        }
+                    },
+                    "end": "\\{|;",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.brackets.curly.regino"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#block-comments"
+                        },
+                        {
+                            "include": "#comments"
+                        },
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#lvariables"
+                        },
+                        {
+                            "include": "#constants"
+                        },
+                        {
+                            "include": "#gtypes"
+                        },
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#lifetimes"
+                        },
+                        {
+                            "include": "#macros"
+                        },
+                        {
+                            "include": "#namespaces"
+                        },
+                        {
+                            "include": "#punctuation"
+                        },
+                        {
+                            "include": "#strings"
+                        },
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "include": "#variables"
+                        }
+                    ]
+                },
+                {
+                    "comment": "function/method calls, chaining",
+                    "name": "meta.function.call.regino",
+                    "begin": "((?:r#(?!crate|[Ss]elf|super))?[A-Za-z0-9_]+)(\\()",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "entity.name.function.regino"
+                        },
+                        "2": {
+                            "name": "punctuation.brackets.round.regino"
+                        }
+                    },
+                    "end": "\\)",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.brackets.round.regino"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#block-comments"
+                        },
+                        {
+                            "include": "#comments"
+                        },
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#lvariables"
+                        },
+                        {
+                            "include": "#constants"
+                        },
+                        {
+                            "include": "#gtypes"
+                        },
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#lifetimes"
+                        },
+                        {
+                            "include": "#macros"
+                        },
+                        {
+                            "include": "#namespaces"
+                        },
+                        {
+                            "include": "#punctuation"
+                        },
+                        {
+                            "include": "#strings"
+                        },
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "include": "#variables"
+                        }
+                    ]
+                },
+                {
+                    "comment": "function/method calls with turbofish",
+                    "name": "meta.function.call.regino",
+                    "begin": "((?:r#(?!crate|[Ss]elf|super))?[A-Za-z0-9_]+)(?=::<.*>\\()",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "entity.name.function.regino"
+                        }
+                    },
+                    "end": "\\)",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.brackets.round.regino"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#block-comments"
+                        },
+                        {
+                            "include": "#comments"
+                        },
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#lvariables"
+                        },
+                        {
+                            "include": "#constants"
+                        },
+                        {
+                            "include": "#gtypes"
+                        },
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#lifetimes"
+                        },
+                        {
+                            "include": "#macros"
+                        },
+                        {
+                            "include": "#namespaces"
+                        },
+                        {
+                            "include": "#punctuation"
+                        },
+                        {
+                            "include": "#strings"
+                        },
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "include": "#variables"
+                        }
+                    ]
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "comment": "control flow keywords",
+                    "name": "keyword.control.regino",
+                    "match": "\\b(await|break|continue|do|else|for|if|loop|match|return|try|while|yield)\\b"
+                },
+                {
+                    "comment": "storage keywords",
+                    "name": "keyword.other.regino storage.type.regino",
+                    "match": "\\b(extern|let|macro|mod)\\b"
+                },
+                {
+                    "comment": "const keyword",
+                    "name": "storage.modifier.regino",
+                    "match": "\\b(const)\\b"
+                },
+                {
+                    "comment": "type keyword",
+                    "name": "keyword.declaration.type.regino storage.type.regino",
+                    "match": "\\b(type)\\b"
+                },
+                {
+                    "comment": "enum keyword",
+                    "name": "keyword.declaration.enum.regino storage.type.regino",
+                    "match": "\\b(enum)\\b"
+                },
+                {
+                    "comment": "trait keyword",
+                    "name": "keyword.declaration.trait.regino storage.type.regino",
+                    "match": "\\b(trait)\\b"
+                },
+                {
+                    "comment": "struct keyword",
+                    "name": "keyword.declaration.struct.regino storage.type.regino",
+                    "match": "\\b(struct)\\b"
+                },
+                {
+                    "comment": "storage modifiers",
+                    "name": "storage.modifier.regino",
+                    "match": "\\b(abstract|static)\\b"
+                },
+                {
+                    "comment": "other keywords",
+                    "name": "keyword.other.regino",
+                    "match": "\\b(as|async|become|box|dyn|move|final|impl|in|override|priv|pub|ref|typeof|union|unsafe|unsized|use|virtual|where)\\b"
+                },
+                {
+                    "comment": "func",
+                    "name": "keyword.other.func.regino",
+                    "match": "\\bfunc\\b"
+                },
+                {
+                    "comment": "prop",
+                    "name": "keyword.other.prop.regino",
+                    "match": "\\bprop\\b"
+                },
+                {
+                    "comment": "crate",
+                    "name": "keyword.other.crate.regino",
+                    "match": "\\bcrate\\b"
+                },
+                {
+                    "comment": "mut",
+                    "name": "storage.modifier.mut.regino",
+                    "match": "\\bmut\\b"
+                },
+                {
+                    "comment": "logical operators",
+                    "name": "keyword.operator.logical.regino",
+                    "match": "(\\^|\\||\\|\\||&&|<<|>>|!)(?!=)"
+                },
+                {
+                    "comment": "logical AND, borrow references",
+                    "name": "keyword.operator.borrow.and.regino",
+                    "match": "&(?![&=])"
+                },
+                {
+                    "comment": "assignment operators",
+                    "name": "keyword.operator.assignment.regino",
+                    "match": "(\\+=|-=|\\*=|/=|%=|\\^=|&=|\\|=|<<=|>>=)"
+                },
+                {
+                    "comment": "single equal",
+                    "name": "keyword.operator.assignment.equal.regino",
+                    "match": "(?<![<>])=(?!=|>)"
+                },
+                {
+                    "comment": "comparison operators",
+                    "name": "keyword.operator.comparison.regino",
+                    "match": "(=(=)?(?!>)|!=|<=|(?<!=)>=)"
+                },
+                {
+                    "comment": "math operators",
+                    "name": "keyword.operator.math.regino",
+                    "match": "(([+%]|(\\*(?!\\w)))(?!=))|(-(?!>))|(/(?!/))"
+                },
+                {
+                    "comment": "less than, greater than (special case)",
+                    "match": "(?:\\b|(?:(\\))|(\\])|(\\})))[ \\t]+([<>])[ \\t]+(?:\\b|(?:(\\()|(\\[)|(\\{)))",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.brackets.round.regino"
+                        },
+                        "2": {
+                            "name": "punctuation.brackets.square.regino"
+                        },
+                        "3": {
+                            "name": "punctuation.brackets.curly.regino"
+                        },
+                        "4": {
+                            "name": "keyword.operator.comparison.regino"
+                        },
+                        "5": {
+                            "name": "punctuation.brackets.round.regino"
+                        },
+                        "6": {
+                            "name": "punctuation.brackets.square.regino"
+                        },
+                        "7": {
+                            "name": "punctuation.brackets.curly.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "namespace operator",
+                    "name": "keyword.operator.namespace.regino",
+                    "match": "::"
+                },
+                {
+                    "comment": "dereference asterisk",
+                    "match": "(\\*)(?=\\w+)",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.operator.dereference.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "subpattern binding",
+                    "name": "keyword.operator.subpattern.regino",
+                    "match": "@"
+                },
+                {
+                    "comment": "dot access",
+                    "name": "keyword.operator.access.dot.regino",
+                    "match": "\\.(?!\\.)"
+                },
+                {
+                    "comment": "ranges, range patterns",
+                    "name": "keyword.operator.range.regino",
+                    "match": "\\.{2}(=|\\.)?"
+                },
+                {
+                    "comment": "colon",
+                    "name": "keyword.operator.key-value.regino",
+                    "match": ":(?!:)"
+                },
+                {
+                    "comment": "dashrocket, skinny arrow",
+                    "name": "keyword.operator.arrow.skinny.regino",
+                    "match": "->"
+                },
+                {
+                    "comment": "hashrocket, fat arrow",
+                    "name": "keyword.operator.arrow.fat.regino",
+                    "match": "=>"
+                },
+                {
+                    "comment": "dollar macros",
+                    "name": "keyword.operator.macro.dollar.regino",
+                    "match": "\\$"
+                },
+                {
+                    "comment": "question mark operator, questionably sized, macro kleene matcher",
+                    "name": "keyword.operator.question.regino",
+                    "match": "\\?"
+                }
+            ]
+        },
+        "interpolations": {
+            "comment": "curly brace interpolations",
+            "name": "meta.interpolation.regino",
+            "match": "({)[^\"{}]*(})",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.interpolation.regino"
+                },
+                "2": {
+                    "name": "punctuation.definition.interpolation.regino"
+                }
+            }
+        },
+        "lifetimes": {
+            "patterns": [
+                {
+                    "comment": "named lifetime parameters",
+                    "match": "(['])([a-zA-Z_][0-9a-zA-Z_]*)(?!['])\\b",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.lifetime.regino"
+                        },
+                        "2": {
+                            "name": "entity.name.type.lifetime.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "borrowing references to named lifetimes",
+                    "match": "(\\&)(['])([a-zA-Z_][0-9a-zA-Z_]*)(?!['])\\b",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.operator.borrow.regino"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.lifetime.regino"
+                        },
+                        "3": {
+                            "name": "entity.name.type.lifetime.regino"
+                        }
+                    }
+                }
+            ]
+        },
+        "macros": {
+            "patterns": [
+                {
+                    "comment": "macros",
+                    "name": "meta.macro.regino",
+                    "match": "(([a-z_][A-Za-z0-9_]*!)|([A-Z_][A-Za-z0-9_]*!))",
+                    "captures": {
+                        "2": {
+                            "name": "entity.name.function.macro.regino"
+                        },
+                        "3": {
+                            "name": "entity.name.type.macro.regino"
+                        }
+                    }
+                }
+            ]
+        },
+        "namespaces": {
+            "patterns": [
+                {
+                    "comment": "namespace (non-type, non-function path segment)",
+                    "match": "(?<![A-Za-z0-9_])([a-z0-9_]+)((?<!super|self)::)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.namespace.regino"
+                        },
+                        "2": {
+                            "name": "keyword.operator.namespace.regino"
+                        }
+                    }
+                }
+            ]
+        },
+        "types": {
+            "patterns": [
+                {
+                    "comment": "numeric types",
+                    "match": "(?<![A-Za-z])(f32|f64|i128|i16|i32|i64|i8|isize|u128|u16|u32|u64|u8|usize)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.numeric.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "parameterized types",
+                    "begin": "\\b([A-Z][A-Za-z0-9]*)(<)",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "entity.name.type.regino"
+                        },
+                        "2": {
+                            "name": "punctuation.brackets.angle.regino"
+                        }
+                    },
+                    "end": ">",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.brackets.angle.regino"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#block-comments"
+                        },
+                        {
+                            "include": "#comments"
+                        },
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#lvariables"
+                        },
+                        {
+                            "include": "#lifetimes"
+                        },
+                        {
+                            "include": "#punctuation"
+                        },
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "include": "#variables"
+                        }
+                    ]
+                },
+                {
+                    "comment": "primitive types",
+                    "name": "entity.name.type.primitive.regino",
+                    "match": "\\b(bool|char|str)\\b"
+                },
+                {
+                    "comment": "trait declarations",
+                    "match": "\\b(trait)\\s+([A-Z][A-Za-z0-9]*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.declaration.trait.regino storage.type.regino"
+                        },
+                        "2": {
+                            "name": "entity.name.type.trait.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "struct declarations",
+                    "match": "\\b(struct)\\s+([A-Z][A-Za-z0-9]*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.declaration.struct.regino storage.type.regino"
+                        },
+                        "2": {
+                            "name": "entity.name.type.struct.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "enum declarations",
+                    "match": "\\b(enum)\\s+([A-Z][A-Za-z0-9_]*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.declaration.enum.regino storage.type.regino"
+                        },
+                        "2": {
+                            "name": "entity.name.type.enum.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "type declarations",
+                    "match": "\\b(type)\\s+([A-Z][A-Za-z0-9_]*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.declaration.type.regino storage.type.regino"
+                        },
+                        "2": {
+                            "name": "entity.name.type.declaration.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "types",
+                    "name": "entity.name.type.regino",
+                    "match": "\\b[A-Z][A-Za-z0-9]*\\b(?!!)"
+                }
+            ]
+        },
+        "gtypes": {
+            "patterns": [
+                {
+                    "comment": "option types",
+                    "name": "entity.name.type.option.regino",
+                    "match": "\\b(Some|None)\\b"
+                },
+                {
+                    "comment": "result types",
+                    "name": "entity.name.type.result.regino",
+                    "match": "\\b(Ok|Err)\\b"
+                }
+            ]
+        },
+        "punctuation": {
+            "patterns": [
+                {
+                    "comment": "comma",
+                    "name": "punctuation.comma.regino",
+                    "match": ","
+                },
+                {
+                    "comment": "curly braces",
+                    "name": "punctuation.brackets.curly.regino",
+                    "match": "[{}]"
+                },
+                {
+                    "comment": "parentheses, round brackets",
+                    "name": "punctuation.brackets.round.regino",
+                    "match": "[()]"
+                },
+                {
+                    "comment": "semicolon",
+                    "name": "punctuation.semi.regino",
+                    "match": ";"
+                },
+                {
+                    "comment": "square brackets",
+                    "name": "punctuation.brackets.square.regino",
+                    "match": "[\\[\\]]"
+                },
+                {
+                    "comment": "angle brackets",
+                    "name": "punctuation.brackets.angle.regino",
+                    "match": "(?<!=)[<>]"
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "comment": "double-quoted strings and byte strings",
+                    "name": "string.quoted.double.regino",
+                    "begin": "(b?)(\")",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "string.quoted.byte.raw.regino"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.string.regino"
+                        }
+                    },
+                    "end": "\"",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.string.regino"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#escapes"
+                        },
+                        {
+                            "include": "#interpolations"
+                        }
+                    ]
+                },
+                {
+                    "comment": "double-quoted raw strings and raw byte strings",
+                    "name": "string.quoted.double.regino",
+                    "begin": "(b?r)(#*)(\")",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "string.quoted.byte.raw.regino"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.string.raw.regino"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.string.regino"
+                        }
+                    },
+                    "end": "(\")(\\2)",
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.string.regino"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.string.raw.regino"
+                        }
+                    }
+                },
+                {
+                    "comment": "characters and bytes",
+                    "name": "string.quoted.single.char.regino",
+                    "begin": "(b)?(')",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "string.quoted.byte.raw.regino"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.char.regino"
+                        }
+                    },
+                    "end": "'",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.char.regino"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#escapes"
+                        }
+                    ]
+                }
+            ]
+        },
+        "lvariables": {
+            "patterns": [
+                {
+                    "comment": "self",
+                    "name": "variable.language.self.regino",
+                    "match": "\\b[Ss]elf\\b"
+                },
+                {
+                    "comment": "super",
+                    "name": "variable.language.super.regino",
+                    "match": "\\bsuper\\b"
+                }
+            ]
+        },
+        "variables": {
+            "patterns": [
+                {
+                    "comment": "variables",
+                    "name": "variable.other.regino",
+                    "match": "\\b(?<!(?<!\\.)\\.)(?:r#(?!(crate|[Ss]elf|super)))?[a-z0-9_]+\\b"
+                },
 				{
-					"name": "constant.character.escape.regino",
-					"match": "\\\\."
+					"comment": "back-quoted variables",
+					"name": "variable.other.regino",
+                    "begin": "`",
+                    "end": "`",
+                    "patterns": [
+                        {
+                            "include": "variables"
+                        },
+                        {
+                            "include": "keywords"
+                        }
+                    ]
 				}
-			]
-		}
-	},
-	"scopeName": "source.rgn"
+            ]
+        }
+    }
 }

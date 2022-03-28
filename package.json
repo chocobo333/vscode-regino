@@ -33,7 +33,7 @@
         "grammars": [
             {
                 "language": "regino",
-                "scopeName": "source.rgn",
+                "scopeName": "source.regino",
                 "path": "./syntaxes/regino.json"
             }
         ],
