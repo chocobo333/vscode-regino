@@ -651,7 +651,7 @@
                 {
                     "comment": "control flow keywords",
                     "name": "keyword.control.regino",
-                    "match": "\\b(await|break|continue|do|else|for|if|loop|match|return|try|while|yield)\\b"
+                    "match": "\\b(await|break|continue|do|else|elif|for|if|loop|match|return|try|while|yield)\\b"
                 },
                 {
                     "comment": "storage keywords",
