@@ -3,9 +3,11 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+'use strict';
+
 import * as path from 'path';
 import * as fs from 'fs'
-import { workspace, ExtensionContext, window } from 'vscode';
+import { commands, workspace, ExtensionContext, window } from 'vscode';
 
 import {
     LanguageClient,
@@ -13,7 +15,7 @@ import {
     ServerOptions
 } from 'vscode-languageclient/node';
 
-let client: LanguageClient;
+let client: LanguageClient | null;
 
 const reginoHome = (): string | null => {
     const config = workspace.getConfiguration("regino")
@@ -41,13 +43,13 @@ const reginoBin = (): string | null => {
     return null
 }
 
-export function activate(context: ExtensionContext) {
-    // const serverCommand = reginoBin() + " lsp"
+export function newClient(): LanguageClient | null {
     const serverCommand = "regino"
     if (!serverCommand) {
         window.showInformationMessage(
             "No 'regino'(compiler) binary could be found in PATH environment variable",
         );
+        return null;
     } else {
         const args: string[] = ["lsp"]
         let options = {
@@ -69,16 +71,31 @@ export function activate(context: ExtensionContext) {
         };
 
         // Create the language client and start the client.
-        client = new LanguageClient(
+        return new LanguageClient(
             'reginoLanguageServer',
             'Regino Language Server',
             serverOptions,
             clientOptions
         );
-
-        // Start the client. This will also launch the server
-        client.start();
     }
+}
+export function activate(context: ExtensionContext) {
+    // const serverCommand = reginoBin() + " lsp"
+
+    // Initialize language client
+    client = newClient()
+
+    // Start the client. This will also launch the server
+    client.start();
+
+    // Register restart commands
+    const command = "vscode-regino.restart-lsp"
+    const commandHandler = () => {
+        client.stop()
+        client = newClient()
+        client.start()
+    }
+    context.subscriptions.push(commands.registerCommand(command, commandHandler))
 }
 
 export function deactivate(): Thenable<void> | undefined {

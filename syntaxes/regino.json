@@ -656,7 +656,7 @@
                 {
                     "comment": "storage keywords",
                     "name": "keyword.other.regino storage.type.regino",
-                    "match": "\\b(extern|let|macro|mod)\\b"
+                    "match": "\\b(extern|let|macro|mod|import)\\b"
                 },
                 {
                     "comment": "const keyword",

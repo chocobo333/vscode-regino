@@ -1,0 +1,10 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build and install",
+            "type": "shell",
+            "command": "npx vsce package && code --install-extension vscode-regino-0.0.1.vsix"
+        }
+    ]
+}
